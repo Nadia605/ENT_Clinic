@@ -1,21 +1,49 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #0F766E;
-  --color-brand-light: #CCFBF1;
-  --color-brand-dark: #115E59;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #F8FAFC;
-  --color-danger: #DC2626;
-  --color-warning: #D97706;
-  --color-success: #16A34A;
-  --color-info: #2563EB;
-  
-  --font-sans: 'Inter', sans-serif;
-  --font-arabic: 'Cairo', sans-serif;
+  --color-pearl: #F7F2EA;
+  --color-cream: #FFFBF4;
+  --color-sand: #EDE4D6;
+  --color-ink: #0C2A31;
+  --color-ink-soft: #46636A;
+  --color-lagoon: #0E6F77;
+  --color-abyss: #072A31;
+  --color-mint: #BFE3D6;
+  --color-apricot: #F2A25C;
+  --color-blush: #F3C9BC;
+  --color-ok: #2E8B67;
+  --color-warning: #D9941E;
+  --color-danger: #C9382C;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-display: 'Fraunces', serif;
+  --font-arabic: 'Noto Kufi Arabic', sans-serif;
 }
 
-/* When Arabic is active, use Cairo as the primary font */
-[dir="rtl"] {
-  font-family: var(--font-arabic), var(--font-sans);
+:root { color-scheme: light; }
+* { border-color: var(--color-sand); }
+body { background: var(--color-pearl); color: var(--color-ink); font-family: var(--font-sans); }
+[dir="rtl"] body { font-family: var(--font-arabic), var(--font-sans); }
+.grain { background-image: radial-gradient(rgba(12,42,49,.055) .7px, transparent .7px); background-size: 5px 5px; }
+.font-display { font-family: var(--font-display); }
+.arch { border-radius: 999px 999px 18px 18px; }
+.wave-line { background-image: linear-gradient(90deg, transparent 0 4%, var(--color-apricot) 4% 4.5%, transparent 4.5% 8%, var(--color-apricot) 8% 8.5%, transparent 8.5% 12%, var(--color-apricot) 12% 12.5%, transparent 12.5% 100%); background-size: 180px 1px; }
+.focus-ring:focus-visible { outline: 3px solid var(--color-apricot); outline-offset: 3px; }
+@keyframes drift { from { transform: translateX(0); } to { transform: translateX(18px); } }
+.drift { animation: drift 5s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+.dark { color-scheme: dark; }
+.dark body { background: #061A1F; color: #E9F1EE; }
+.dark .surface { background: #0C2830; border-color: #12353F; }
+.dark .muted { color: #9DB8B6; }
+
+@layer base {
+  button, a, input, select { min-height: 44px; }
 }
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+}
+
+/* Keep the warm clinic identity coherent with the app's original token aliases. */
+@theme { --color-brand: #0E6F77; --color-brand-dark: #072A31; --color-surface: #FFFBF4; --color-surface-alt: #F7F2EA; }
+.font-arabic { font-family: var(--font-arabic); }
