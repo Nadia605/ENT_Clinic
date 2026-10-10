@@ -1,0 +1,75 @@
+{
+  "common": {
+    "appName": "Mohamed Khalil ENT Clinic",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "poweredBy": "Powered by AuraENT"
+  },
+  "auth": {
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "loginTitle": "Welcome",
+    "loginSubtitle": "Sign in to your account",
+    "invalidCredentials": "Invalid email or password",
+    "sessionExpired": "Your session has expired. Please sign in again."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "appointments": "Appointments",
+    "queue": "Queue",
+    "visits": "Visits",
+    "prescriptions": "Prescriptions",
+    "billing": "Billing",
+    "rooms": "Rooms",
+    "inventory": "Inventory",
+    "equipment": "Equipment",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "staff": "Staff",
+    "catalogs": "Catalogs",
+    "auditLog": "Audit Log",
+    "clinical": "Clinical",
+    "management": "Management"
+  },
+  "settings": {
+    "title": "Clinic Settings",
+    "clinicName": "Clinic Name",
+    "doctorDisplayName": "Doctor Display Name",
+    "specialtyLine": "Specialty",
+    "phone": "Phone Number",
+    "whatsapp": "WhatsApp Number",
+    "address": "Address",
+    "workingHours": "Working Hours",
+    "logo": "Clinic Logo",
+    "brandColor": "Brand Color",
+    "currency": "Currency",
+    "timezone": "Timezone",
+    "language": "Default Language",
+    "saved": "Settings saved successfully"
+  },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "language": {
+    "en": "English",
+    "ar": "العربية",
+    "switchTo": "Switch language"
+  }
+}

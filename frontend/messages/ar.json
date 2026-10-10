@@ -1,0 +1,75 @@
+{
+  "common": {
+    "appName": "عيادة محمد خليل للأنف والأذن والحنجرة",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "search": "بحث",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "yes": "نعم",
+    "no": "لا",
+    "poweredBy": "مدعوم بواسطة AuraENT"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "loginTitle": "مرحباً",
+    "loginSubtitle": "سجل دخولك إلى حسابك",
+    "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
+    "sessionExpired": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى."
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "patients": "المرضى",
+    "appointments": "المواعيد",
+    "queue": "قائمة الانتظار",
+    "visits": "الزيارات",
+    "prescriptions": "الوصفات الطبية",
+    "billing": "الفواتير",
+    "rooms": "الغرف",
+    "inventory": "المخزون",
+    "equipment": "المعدات",
+    "analytics": "التحليلات",
+    "settings": "الإعدادات",
+    "staff": "الموظفون",
+    "catalogs": "الكتالوجات",
+    "auditLog": "سجل المراجعة",
+    "clinical": "العيادة",
+    "management": "الإدارة"
+  },
+  "settings": {
+    "title": "إعدادات العيادة",
+    "clinicName": "اسم العيادة",
+    "doctorDisplayName": "اسم الطبيب",
+    "specialtyLine": "التخصص",
+    "phone": "رقم الهاتف",
+    "whatsapp": "رقم الواتساب",
+    "address": "العنوان",
+    "workingHours": "ساعات العمل",
+    "logo": "شعار العيادة",
+    "brandColor": "لون العلامة التجارية",
+    "currency": "العملة",
+    "timezone": "المنطقة الزمنية",
+    "language": "اللغة الافتراضية",
+    "saved": "تم حفظ الإعدادات بنجاح"
+  },
+  "greeting": {
+    "morning": "صباح الخير",
+    "afternoon": "مساء الخير",
+    "evening": "مساء الخير"
+  },
+  "language": {
+    "en": "English",
+    "ar": "العربية",
+    "switchTo": "تغيير اللغة"
+  }
+}

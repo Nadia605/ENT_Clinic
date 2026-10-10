@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #0F766E;
+  --color-brand-light: #CCFBF1;
+  --color-brand-dark: #115E59;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F8FAFC;
+  --color-danger: #DC2626;
+  --color-warning: #D97706;
+  --color-success: #16A34A;
+  --color-info: #2563EB;
+  
+  --font-sans: 'Inter', sans-serif;
+  --font-arabic: 'Cairo', sans-serif;
+}
+
+/* When Arabic is active, use Cairo as the primary font */
+[dir="rtl"] {
+  font-family: var(--font-arabic), var(--font-sans);
+}
