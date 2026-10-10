@@ -1,8 +1,9 @@
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from .schemas import LoginRequest, TokenResponse
-from .service import authenticate_user, create_tokens
+from .schemas import LoginRequest, RegisterRequest, RegisterResponse, TokenResponse
+from .service import authenticate_user, create_tokens, register_user
 from app.dependencies import get_current_user
 from app.models.user import User
 
@@ -16,9 +17,25 @@ async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
         )
+    if req.role and user.role.value != req.role:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is not registered for this role")
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
+    user.last_login_at = datetime.now(timezone.utc)
+    await db.commit()
     return create_tokens(user)
+
+@router.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
+async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
+    user = await register_user(db, req)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
+    return RegisterResponse(
+        id=user.id,
+        email=user.email,
+        role=user.role.value,
+        status="active" if user.is_active else "pending",
+    )
 
 @router.post("/refresh")
 async def refresh():
