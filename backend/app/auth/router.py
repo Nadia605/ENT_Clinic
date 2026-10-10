@@ -27,6 +27,11 @@ async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
 
 @router.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
 async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
+    if req.role != "patient":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Staff accounts are created by the doctor",
+        )
     user = await register_user(db, req)
     if user is None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")

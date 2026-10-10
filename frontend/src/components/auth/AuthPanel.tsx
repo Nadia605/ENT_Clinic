@@ -48,7 +48,8 @@ const copy = {
     hide: 'Hide password',
     submitLogin: 'Sign in',
     submitRegister: 'Create account',
-    staffNote: 'Staff accounts are activated after approval by the clinic.',
+    staffSubtitle: 'Sign in with the account provided by the clinic.',
+    staffNote: 'No sign-up needed. Staff accounts are created by Dr. Mohamed Khalil — ask the doctor for your login details.',
     loginSuccessTitle: 'Signed in successfully',
     loginSuccessBody: (name: string) => `Welcome back${name ? `, ${name}` : ''}. You are now signed in to the clinic portal.`,
     registerSuccessTitle: 'Account created successfully',
@@ -86,7 +87,8 @@ const copy = {
     hide: 'إخفاء كلمة المرور',
     submitLogin: 'تسجيل الدخول',
     submitRegister: 'إنشاء الحساب',
-    staffNote: 'حسابات فريق العمل يتم تفعيلها بعد موافقة العيادة.',
+    staffSubtitle: 'سجّل دخولك بالحساب الذي وفرته لك العيادة.',
+    staffNote: 'لا تحتاج لإنشاء حساب. حسابات فريق العمل ينشئها دكتور محمد خليل — اطلب بيانات الدخول من الطبيب.',
     loginSuccessTitle: 'تم تسجيل الدخول بنجاح',
     loginSuccessBody: (name: string) => `أهلاً بعودتك${name ? ` يا ${name}` : ''}. تم تسجيل دخولك إلى بوابة العيادة.`,
     registerSuccessTitle: 'تم إنشاء حسابك بنجاح',
@@ -134,21 +136,20 @@ export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onMod
   const t = copy[lang];
   const uid = useId();
   const [internalMode, setInternalMode] = useState<AuthMode>('login');
-  const mode = controlledMode ?? internalMode;
+  const [role, setRole] = useState<Role>(fixedRole ?? 'patient');
+  const isStaff = role !== 'patient';
+  const mode: AuthMode = isStaff ? 'login' : controlledMode ?? internalMode;
   const setMode = (next: AuthMode) => {
     setInternalMode(next);
     onModeChange?.(next);
     setError(null);
   };
 
-  const [role, setRole] = useState<Role>(fixedRole ?? 'patient');
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<Success | null>(null);
   const [email, setEmail] = useState('');
-
-  const isStaff = role !== 'patient';
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -237,7 +238,7 @@ export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onMod
             <h2 id={`${uid}-title`} className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
               {t.title}
             </h2>
-            <p className="mt-1 text-sm leading-6 text-white/55">{t.subtitle}</p>
+            <p className="mt-1 text-sm leading-6 text-white/55">{isStaff ? t.staffSubtitle : t.subtitle}</p>
           </div>
           <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-cyan-300/25 bg-cyan-300/10 text-cyan-200">
             <LockKeyhole className="size-4" aria-hidden="true" />
@@ -267,7 +268,7 @@ export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onMod
           </div>
         ) : (
           <>
-            <div role="tablist" aria-label={t.title} className="mt-6 grid grid-cols-2 gap-1 rounded-2xl border border-white/10 bg-black/20 p-1">
+            <div role="tablist" aria-label={t.title} hidden={isStaff} className="mt-6 grid grid-cols-2 gap-1 rounded-2xl border border-white/10 bg-black/20 p-1 [&[hidden]]:hidden">
               {(['login', 'register'] as const).map((tab) => {
                 const Icon = tab === 'login' ? LogIn : UserPlus;
                 const active = mode === tab;
@@ -352,6 +353,7 @@ export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onMod
                     inputClass={inputClass}
                     labelClass={labelClass}
                   />
+                  {isStaff ? <p className="rounded-xl border border-cyan-300/20 bg-cyan-300/[.06] px-3 py-2 text-xs leading-5 text-cyan-100/90">{t.staffNote}</p> : null}
                   <ErrorMessage message={error} />
                   <SubmitButton submitting={submitting} label={t.submitLogin} icon={LogIn} />
                 </form>
@@ -393,7 +395,6 @@ export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onMod
                       labelClass={labelClass}
                     />
                   </div>
-                  {isStaff ? <p className="rounded-xl border border-amber-300/20 bg-amber-300/[.07] px-3 py-2 text-xs leading-5 text-amber-100/90">{t.staffNote}</p> : null}
                   <ErrorMessage message={error} />
                   <SubmitButton submitting={submitting} label={t.submitRegister} icon={UserPlus} />
                 </form>

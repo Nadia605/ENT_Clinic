@@ -5,7 +5,7 @@ from .utils import hash_password, verify_password, create_access_token, create_r
 from app.models.user import User, UserRole
 
 async def register_user(db: AsyncSession, req: RegisterRequest) -> User | None:
-    """Create a new account. Patients are active immediately; staff accounts await clinic approval."""
+    """Create a patient account. Staff accounts are provisioned by the doctor, never self-registered."""
     email = req.email.lower()
     existing = await db.execute(select(User).where(User.email == email))
     if existing.scalars().first():
