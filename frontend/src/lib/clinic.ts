@@ -2,16 +2,10 @@ export type Lang = 'en' | 'ar';
 
 export const CLINIC_TIMEZONE = 'Africa/Cairo';
 
-export const clinicPhones = ['01055968484', '01102560550'] as const;
-
 export const clinicAddress = {
-  ar: 'البدرشين، شارع النيل السعيد، أمام فودافون، برج الحمد، الدور الأول',
-  en: 'Al-Hamd Tower, 1st floor, El-Nil El-Saeed St., opposite Vodafone, El Badrashein, Giza',
+  ar: 'مصر، الجيزة',
+  en: 'Giza, Egypt',
 };
-
-export const clinicMapUrl =
-  'https://www.google.com/maps/search/?api=1&query=' +
-  encodeURIComponent('برج الحمد شارع النيل السعيد البدرشين الجيزة');
 
 /** Opening hours per weekday (0 = Sunday … 6 = Saturday), 24h clock in Cairo time. */
 export const weeklyHours: Record<number, { open: number; close: number } | null> = {
@@ -23,12 +17,6 @@ export const weeklyHours: Record<number, { open: number; close: number } | null>
   5: null,
   6: { open: 16, close: 21 },
 };
-
-export const PHONE_BOOKING_START = 11;
-export const CONSULTATION_BOOKING = { start: 11, end: 14 };
-
-/** Display order of the clinic week, starting Saturday. */
-export const weekOrder = [6, 0, 1, 2, 3, 4, 5];
 
 export const dayNames: Record<Lang, string[]> = {
   en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -42,10 +30,6 @@ export function formatHour(hour: number, lang: Lang) {
     return `${h12.toLocaleString('ar-EG')} ${period}`;
   }
   return `${h12}:00 ${hour < 12 ? 'AM' : 'PM'}`;
-}
-
-export function formatPhone(phone: string, lang: Lang) {
-  return lang === 'ar' ? phone.replace(/\d/g, (d) => Number(d).toLocaleString('ar-EG')) : phone;
 }
 
 export function getCairoNow(date = new Date()) {
@@ -84,10 +68,4 @@ export function getClinicStatus(date = new Date()): ClinicStatus {
     if (hours) return { kind: 'upcoming', day: next, dayOffset: offset, ...hours };
   }
   throw new Error('Clinic schedule has no open days');
-}
-
-export function isPhoneBookingOpen(date = new Date()) {
-  const { day, minutes } = getCairoNow(date);
-  const hours = weeklyHours[day];
-  return Boolean(hours) && minutes >= PHONE_BOOKING_START * 60 && minutes < (hours?.close ?? 0) * 60;
 }

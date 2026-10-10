@@ -61,7 +61,8 @@ body { background: var(--color-pearl); color: var(--color-ink); font-family: var
 .ent-primary svg { width: 16px; }
 .ent-anatomy-card { position: relative; isolation: isolate; height: 470px; max-width: 510px; margin: auto; overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 44% 44% 20px 20px; background: #0c2932; box-shadow: 0 30px 90px rgba(0,0,0,.45), 0 0 80px rgba(45,212,191,.08); animation: float-ear 7s ease-in-out infinite; }
 .ent-anatomy-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; mix-blend-mode: screen; opacity: .92; }
-.ent-ring { position: absolute; border: 1px solid rgba(103,232,249,.22); border-radius: 999px; pointer-events: none; }
+  .ent-anatomy-card.ent-photo img { mix-blend-mode: normal; opacity: 1; object-position: center 22%; }
+  .ent-ring { position: absolute; border: 1px solid rgba(103,232,249,.22); border-radius: 999px; pointer-events: none; }
 .ent-ring-one { inset: 4% 6%; animation: ring-pulse 5s ease-in-out infinite; }
 .ent-ring-two { inset: 12% 14%; border-color: rgba(94,234,212,.14); animation: ring-pulse 5s 1s ease-in-out infinite reverse; }
 .ent-floating-note { position: absolute; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 16px; padding: 10px 12px; background: rgba(4,20,28,.72); box-shadow: 0 16px 40px rgba(0,0,0,.22); backdrop-filter: blur(12px); animation: float-note 5s ease-in-out infinite; }
