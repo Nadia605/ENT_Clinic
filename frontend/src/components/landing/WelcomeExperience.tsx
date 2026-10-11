@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Activity, ArrowUpRight, CalendarDays, ClipboardList, Ear, Eye, Headphones, HeartPulse, LockKeyhole, Stethoscope, UserRound, UsersRound } from 'lucide-react';
 import { useRouter } from '@/i18n/navigation';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
@@ -26,8 +26,12 @@ const roleData = [
 const routes: Record<string, string> = { patient: '/patient', doctor: '/doctor', receptionist: '/reception', assistant: '/assistant' };
 
 export default function WelcomeExperience({ locale }: { locale: string }) {
+  const [mounted, setMounted] = useState(false);
   const isArabic = locale === 'ar';
   const lang: Lang = isArabic ? 'ar' : 'en';
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
   const t = copy[lang];
   const router = useRouter();
   const [selected, setSelected] = useState<string | null>(null);
