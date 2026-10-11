@@ -1,8 +1,11 @@
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from .schemas import LoginRequest, TokenResponse
-from .service import authenticate_user, create_tokens
+from app import audit
+from .utils import hash_password, verify_password
+from .schemas import ChangePasswordRequest, LoginRequest, RegisterRequest, RegisterResponse, TokenResponse
+from .service import authenticate_user, create_tokens, register_user
 from app.dependencies import get_current_user
 from app.models.user import User
 
@@ -16,9 +19,30 @@ async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
         )
+    if req.role and user.role.value != req.role:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is not registered for this role")
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
+    user.last_login_at = datetime.now(timezone.utc)
+    await db.commit()
     return create_tokens(user)
+
+@router.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
+async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
+    if req.role != "patient":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Staff accounts are created by the doctor",
+        )
+    user = await register_user(db, req)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
+    return RegisterResponse(
+        id=user.id,
+        email=user.email,
+        role=user.role.value,
+        status="active" if user.is_active else "pending",
+    )
 
 @router.post("/refresh")
 async def refresh():
@@ -37,3 +61,11 @@ async def get_me(current_user: User = Depends(get_current_user)):
         "full_name_en": current_user.full_name_en,
         "full_name_ar": current_user.full_name_ar,
     }
+
+@router.post("/change-password", status_code=status.HTTP_204_NO_CONTENT)
+async def change_password(req: ChangePasswordRequest, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    if not verify_password(req.current_password, current_user.password_hash):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Current password is incorrect")
+    current_user.password_hash = hash_password(req.new_password)
+    audit.record(db, current_user, "auth.change_password", "user", current_user.id)
+    await db.commit()

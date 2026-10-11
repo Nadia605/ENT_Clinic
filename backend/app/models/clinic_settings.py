@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import JSONB
 from .base import BaseModel
+from .types import JSONType as JSONB
 from typing import Dict, Any
 
 class ClinicSettings(BaseModel):

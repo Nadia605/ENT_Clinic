@@ -1,8 +1,32 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from .schemas import TokenResponse
-from .utils import verify_password, create_access_token, create_refresh_token
-from app.models.user import User
+from .schemas import RegisterRequest, TokenResponse
+from .utils import hash_password, verify_password, create_access_token, create_refresh_token
+from app.models.user import User, UserRole
+
+async def register_user(db: AsyncSession, req: RegisterRequest) -> User | None:
+    """Create a patient account. Staff accounts are provisioned by the doctor, never self-registered."""
+    email = req.email.lower()
+    existing = await db.execute(select(User).where(User.email == email))
+    if existing.scalars().first():
+        return None
+
+    role = UserRole(req.role)
+    name = req.full_name.strip()
+    user = User(
+        email=email,
+        password_hash=hash_password(req.password),
+        role=role,
+        full_name_en=name,
+        full_name_ar=name,
+        phone=req.phone,
+        preferred_language=req.preferred_language,
+        is_active=role == UserRole.patient,
+    )
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return user
 
 async def authenticate_user(db: AsyncSession, email: str, password: str) -> User | None:
     result = await db.execute(select(User).where(User.email == email))
