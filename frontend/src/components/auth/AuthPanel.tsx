@@ -1,6 +1,7 @@
 'use client';
 
 import { useId, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { isAxiosError } from 'axios';
 import {
   AlertCircle,
@@ -17,6 +18,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import { api } from '@/lib/api';
+import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import type { Lang } from '@/lib/clinic';
 
@@ -134,6 +136,8 @@ interface AuthPanelProps {
 
 export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onModeChange, id }: AuthPanelProps) {
   const t = copy[lang];
+  const router = useRouter();
+  const supabase = createClient();
   const uid = useId();
   const [internalMode, setInternalMode] = useState<AuthMode>('login');
   const [role, setRole] = useState<Role>(fixedRole ?? 'patient');
@@ -157,19 +161,15 @@ export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onMod
     setSubmitting(true);
     setError(null);
     try {
-      const { data } = await api.post('/api/v1/auth/login', {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: String(form.get('email')).trim(),
         password: String(form.get('password')),
-        role,
       });
-      localStorage.setItem('token', data.access_token);
-      let name = '';
-      try {
-        const me = await api.get('/api/v1/auth/me');
-        name = (lang === 'ar' ? me.data.full_name_ar : me.data.full_name_en) || me.data.full_name_en || '';
-      } catch {
-        name = '';
-      }
+      if (authError) throw authError;
+      const { data: profile } = await supabase.from('profiles').select('full_name, role').eq('id', data.user.id).maybeSingle();
+      if (profile?.role && profile.role !== role) throw new Error('wrong-role');
+      const name = profile?.full_name || '';
+      router.push(`/${lang}/${role}/workspace`);
       setSuccess({ title: t.loginSuccessTitle, body: t.loginSuccessBody(name), next: 'done' });
     } catch (err) {
       setError(describeError(err, t));
@@ -192,16 +192,18 @@ export default function AuthPanel({ lang, fixedRole, mode: controlledMode, onMod
     setError(null);
     try {
       const registeredEmail = String(form.get('email')).trim();
-      const { data } = await api.post('/api/v1/auth/register', {
-        full_name: String(form.get('fullName')).trim(),
+      const { data, error: authError } = await supabase.auth.signUp({
         email: registeredEmail,
-        phone,
         password,
-        role,
-        preferred_language: lang,
+        options: {
+          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`,
+          data: { full_name: String(form.get('fullName')).trim(), phone, role, preferred_language: lang },
+        },
       });
+      if (authError) throw authError;
+      if (data.user) await supabase.from('profiles').upsert({ id: data.user.id, full_name: String(form.get('fullName')).trim(), phone, role, preferred_language: lang });
       setEmail(registeredEmail);
-      const pending = data?.status === 'pending';
+      const pending = !data.session;
       setSuccess({
         title: pending ? t.registerPendingTitle : t.registerSuccessTitle,
         body: pending ? t.registerPendingBody : t.registerSuccessBody,
