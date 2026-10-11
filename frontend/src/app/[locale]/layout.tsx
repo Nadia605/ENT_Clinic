@@ -20,7 +20,7 @@ export default async function LocaleLayout({
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <div lang={locale} dir={dir}>
+    <div lang={locale} dir={dir} suppressHydrationWarning>
       <NextIntlClientProvider messages={messages} locale={locale}>
         {children}
       </NextIntlClientProvider>
