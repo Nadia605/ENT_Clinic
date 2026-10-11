@@ -12,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${cairo.variable} font-sans bg-surface-alt text-gray-900 min-h-screen`}>
+      <body suppressHydrationWarning className={`${inter.variable} ${cairo.variable} font-sans bg-surface-alt text-gray-900 min-h-screen`}>
         {children}
       </body>
     </html>
