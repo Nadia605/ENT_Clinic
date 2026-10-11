@@ -30,12 +30,12 @@ export default function WelcomeExperience({ locale }: { locale: string }) {
   const isArabic = locale === 'ar';
   const lang: Lang = isArabic ? 'ar' : 'en';
   useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null;
-  const t = copy[lang];
   const router = useRouter();
   const [selected, setSelected] = useState<string | null>(null);
   const clock = useClinicStatus();
+
+  if (!mounted) return null;
+  const t = copy[lang];
 
   function continueToRole(role: string) {
     setSelected(role);
