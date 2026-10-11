@@ -2,7 +2,9 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from .schemas import LoginRequest, RegisterRequest, RegisterResponse, TokenResponse
+from app import audit
+from .utils import hash_password, verify_password
+from .schemas import ChangePasswordRequest, LoginRequest, RegisterRequest, RegisterResponse, TokenResponse
 from .service import authenticate_user, create_tokens, register_user
 from app.dependencies import get_current_user
 from app.models.user import User
@@ -59,3 +61,11 @@ async def get_me(current_user: User = Depends(get_current_user)):
         "full_name_en": current_user.full_name_en,
         "full_name_ar": current_user.full_name_ar,
     }
+
+@router.post("/change-password", status_code=status.HTTP_204_NO_CONTENT)
+async def change_password(req: ChangePasswordRequest, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    if not verify_password(req.current_password, current_user.password_hash):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Current password is incorrect")
+    current_user.password_hash = hash_password(req.new_password)
+    audit.record(db, current_user, "auth.change_password", "user", current_user.id)
+    await db.commit()
