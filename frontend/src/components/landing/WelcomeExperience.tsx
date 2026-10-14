@@ -73,7 +73,7 @@ export default function WelcomeExperience({ locale }: { locale: string }) {
         <div className="relative min-h-[400px] lg:min-h-[500px]">
           <div className="ent-ring ent-ring-one" /><div className="ent-ring ent-ring-two" />
           <div className="ent-anatomy-card">
-            <img src="/images/ent-ear-illustration.png" alt={t.earAlt} />
+            <img src="/images/ent-ear-hero.png" alt={t.earAlt} />
             <div className="absolute inset-0 bg-gradient-to-t from-[#07151d] via-[#07151d]/10 to-transparent" />
             <div className="absolute bottom-6 start-6 end-6 flex items-end justify-between gap-3">
               <div><p className="text-[10px] uppercase tracking-[.2em] text-cyan-200/80">{t.availability}</p><p className="mt-1 text-2xl font-semibold tracking-tight" aria-live="polite">{nextLabel}</p><p className="mt-1 text-xs text-white/55">{t.location}</p></div>
